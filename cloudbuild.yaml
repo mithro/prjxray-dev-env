@@ -5,6 +5,9 @@ steps:
     - '-Oaccess_token'
     - 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token'
 - name: 'gcr.io/cloud-builders/docker'
+  volumes:
+  - name: 'xilinx-vivado'
+    path: '/opt/Xilinx'
   args:
     - 'build'
     - '--build-arg'

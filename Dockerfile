@@ -51,12 +51,14 @@ ENV PATH=$PATH:$VIVADO_BIN
 COPY install_config.txt /staging/
 # Use a wildcard for the token so the copy won't fail if it doesn't exist.
 COPY stream_url.sh *_token /staging/
-RUN /staging/stream_url.sh "${VIVADO_URL}" | tar -C /staging -zxf - && \
+RUN if [ ! -d /opt/Xilinx ]; then \
+    /staging/stream_url.sh "${VIVADO_URL}" | tar -C /staging -zxf - && \
     /staging/${VIVADO_INSTALLER_DIR}/xsetup \
         -b Install \
         -a XilinxEULA,3rdPartyEULA,WebTalkTerms \
         -c /staging/install_config.txt && \
-    rm -rf /staging
+    rm -rf /staging \
+fi
 
 # Setup an entrypoint that creates a non-root user and switches to it.
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
